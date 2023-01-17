@@ -1,0 +1,29 @@
+{
+  "name": "nlw-setup",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "husky:install": "husky install"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.3",
+    "turbo": "^1.7.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": "^16.10 || ^18.12"
+  },
+  "license": "MIT"
+}
