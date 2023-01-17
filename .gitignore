@@ -4,3 +4,9 @@ dist
 build
 
 node_modules
+
+.env.local
+.env.development
+.env.testing
+.env.stating
+.env.production
