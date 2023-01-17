@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "dotenv -v NODE_ENV=development -e .env.development -- tsx watch src/server.ts",
     "migrate": "dotenv -v NODE_ENV=development -e .env.development -- prisma migrate dev",
+    "generate": "dotenv -v NODE_ENV=development -e .env.development -- prisma generate",
     "studio": "dotenv -v NODE_ENV=development -e .env.development -- prisma studio",
     "typecheck": "tsc --noEmit --project tsconfig.json"
   },
