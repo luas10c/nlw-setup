@@ -5,7 +5,7 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      'nativewind/label',
+      'nativewind/babel',
       [
         'module-resolver',
         {
