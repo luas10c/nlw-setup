@@ -10,6 +10,9 @@ lerna-debug.log*
 # Tests
 coverage
 
+# Sqlite Database
+*.db
+
 # Build folders
 dist
 build
