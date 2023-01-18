@@ -3,15 +3,69 @@ generator client {
   binaryTargets = ["native", "linux-musl"]
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String    @id
+  name      String
+  email     String
+  password  String?
+  birthday  String?
+  gender    Int       @default(0)
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+
+  habit Habit[]
+
+  @@map("users")
+}
+
 model Habit {
-  id        String   @id
+  id        String    @id
   title     String
-  createdAt DateTime @map("created_at")
+  user      User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId    String
+  createdAt DateTime  @map("created_at")
+  updatedAt DateTime? @map("updated_at")
+
+  weekDays HabitWeekDays[]
+  dayHabit DayHabit[]
 
   @@map("habits")
+}
+
+model HabitWeekDays {
+  id      String @id
+  weekDay Int    @map("week_day")
+  habit   Habit  @relation(fields: [habitId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  habitId String @map("habit_id")
+
+  @@unique([habitId, weekDay])
+  @@map("habit_week_days")
+}
+
+model Day {
+  id   String   @id
+  date DateTime @unique
+
+  dayHabit DayHabit[]
+
+  @@map("days")
+}
+
+model DayHabit {
+  day     Day    @relation(fields: [dayId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  dayId   String @map("day_id")
+  habit   Habit  @relation(fields: [habitId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  habitId String @map("habit_id")
+
+  @@id([dayId, habitId])
+  @@map("day_habits")
 }
