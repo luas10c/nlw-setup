@@ -12,6 +12,7 @@ coverage
 
 # Sqlite Database
 *.db
+*.sqlite
 
 # Build folders
 dist
