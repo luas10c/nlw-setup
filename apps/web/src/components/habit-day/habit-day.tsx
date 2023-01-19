@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import clsx from 'clsx'
 
 import { PopoverHabitDay } from '../popover-habit-day'
@@ -17,9 +17,20 @@ export const HabitDay = (props: Props) => {
     setOpenedPopover((oldState) => !oldState)
   }
 
+  useEffect(() => {
+    const handleWindowResize = () => {
+      setOpenedPopover(false)
+    }
+
+    window.addEventListener('resize', handleWindowResize)
+
+    return () => {
+      window.removeEventListener('resize', handleWindowResize)
+    }
+  }, [])
+
   const completedPercentage = Math.round(completed * 100) / amount
 
-  console.log(completedPercentage)
   return (
     <div>
       <div
@@ -36,16 +47,16 @@ export const HabitDay = (props: Props) => {
           'border-violet-400 bg-violet-500': completedPercentage >= 80
         })}
         onClick={(event) => {
-          const { x, y } = event.currentTarget.getBoundingClientRect()
-          setPopoverPosition([x, y])
+          const { width, height, x, y } = event.currentTarget.getBoundingClientRect()
+          setPopoverPosition([x + width / 2, y + height / 2 + 149.5 / 2 + 40])
           setOpenedPopover((oldState) => !oldState)
         }}
       ></div>
 
       <PopoverHabitDay
         opened={openedPopover}
-        completedPercentage={completedPercentage}
         position={popoverPosition}
+        completedPercentage={completedPercentage}
         onClose={handleOpenPopover}
       />
     </div>
