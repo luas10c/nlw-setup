@@ -11,6 +11,9 @@ module.exports = {
       resizeMode: 'contain',
       backgroundColor: '#09090A'
     },
+    extra: {
+      baseURL: process.env.API_URL
+    },
     updates: {
       fallbackToCacheTimeout: 0
     },
