@@ -4,12 +4,13 @@ import clsx from 'clsx'
 import { PopoverHabitDay } from '../popover-habit-day'
 
 interface Props {
-  amount: number
-  completed: number
+  date: Date
+  amount?: number
+  completed?: number
 }
 
 export const HabitDay = (props: Props) => {
-  const { amount, completed } = props
+  const { date, amount = 0, completed = 0 } = props
   const [openedPopover, setOpenedPopover] = useState(false)
   const [popoverPosition, setPopoverPosition] = useState([0, 0])
 
@@ -29,7 +30,7 @@ export const HabitDay = (props: Props) => {
     }
   }, [])
 
-  const completedPercentage = Math.round(completed * 100) / amount
+  const completedPercentage = amount > 0 ? Math.round(completed * 100) / amount : 0
 
   return (
     <div>
@@ -48,7 +49,7 @@ export const HabitDay = (props: Props) => {
         })}
         onClick={(event) => {
           const { width, height, x, y } = event.currentTarget.getBoundingClientRect()
-          setPopoverPosition([x + width / 2, y + height / 2 + 149.5 / 2 + 40])
+          setPopoverPosition([x + width / 2, y + height / 2 + 261.5 / 2 + 40])
           setOpenedPopover((oldState) => !oldState)
         }}
       ></div>
@@ -56,7 +57,7 @@ export const HabitDay = (props: Props) => {
       <PopoverHabitDay
         opened={openedPopover}
         position={popoverPosition}
-        completedPercentage={completedPercentage}
+        data={{ date, completedPercentage }}
         onClose={handleOpenPopover}
       />
     </div>
