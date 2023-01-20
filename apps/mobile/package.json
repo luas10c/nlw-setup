@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "src/index.ts",
   "scripts": {
-    "start": "expo start",
+    "start": "dotenv -v NODE_ENV=development -e .env.development -- expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
