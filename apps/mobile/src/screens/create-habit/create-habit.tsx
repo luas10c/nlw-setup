@@ -1,11 +1,21 @@
 import { useState } from 'react'
-import { View, ScrollView, Text, TextInput, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Platform,
+  ToastAndroid,
+  Alert
+} from 'react-native'
 import colors from 'tailwindcss/colors'
 
 import Check from '#/assets/check.svg'
 
 import { BackButton } from '#/components/back-button'
 import { Checkbox } from '#/components/checkbox'
+import { api } from '#/lib/axios'
 
 const avaiableWeekDays = [
   'Domingo',
@@ -19,6 +29,7 @@ const avaiableWeekDays = [
 
 export const CreateHabit = () => {
   const [weekDays, setWeekDays] = useState<number[]>([])
+  const [title, setTitle] = useState('')
 
   const handleToggleWeekDay = (weekDay: number) => {
     if (weekDays.includes(weekDay)) {
@@ -27,6 +38,39 @@ export const CreateHabit = () => {
     }
 
     setWeekDays((oldState) => [...oldState, weekDay])
+  }
+
+  const handleSubmit = async () => {
+    if (!title || !weekDays || weekDays.length === 0) {
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Todos os campos precisam está preenchidos', 100)
+      } else {
+        Alert.alert('Todos os campos precisam está preenchidos')
+      }
+      return
+    }
+
+    try {
+      await api.post('/habit', {
+        title,
+        weekDays
+      })
+      setTitle('')
+      setWeekDays([])
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Hábito criado com sucesso!', 100)
+      } else {
+        Alert.alert('Hábito criado com sucesso!')
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        if (Platform.OS === 'android') {
+          ToastAndroid.show(error.message, 100)
+        } else {
+          Alert.alert(error.message)
+        }
+      }
+    }
   }
 
   return (
@@ -42,8 +86,10 @@ export const CreateHabit = () => {
         </Text>
         <TextInput
           className="h-12 pl-4 rounded-lg mt-3 bg-zinc-900 text-white border-2 border-zinc-800 focus:border-green-600"
+          onChangeText={setTitle}
           placeholder="Ex.: Exercícios, Dormir bem, etc..."
           placeholderTextColor={colors.zinc[400]}
+          value={title}
         />
 
         <Text className="font-semibold mt-4 mb-3 text-white text-base">
@@ -63,6 +109,7 @@ export const CreateHabit = () => {
 
       <TouchableOpacity
         className="w-full h-14 flex-row items-center justify-center bg-green-600 rounded-md mt-6 mb-6"
+        onPress={handleSubmit}
         activeOpacity={0.7}
       >
         <Check color={colors.white} width={20} height={20} />
