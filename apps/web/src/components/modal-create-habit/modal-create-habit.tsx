@@ -1,14 +1,72 @@
+import React, { FormEvent, useState } from 'react'
 import { Check, X } from 'phosphor-react'
+import { toast } from 'react-hot-toast'
 
 import { Modal } from '../modal'
+import { Checkbox } from '../checkbox'
+import { api } from '../../lib/axios'
+
+interface FormInput {
+  title: {
+    value: string
+  }
+}
 
 interface Props {
   opened?: boolean
   onClose?(): void
 }
 
+const availableWeekDays = [
+  'Domingo',
+  'Segunda-feira',
+  'Terça-feira',
+  'Quarta-feira',
+  'Quinta-feira',
+  'Sexta-feira',
+  'Sabado'
+]
+
 export const ModalCreateHabit = (props: Props) => {
   const { opened, onClose } = props
+  const [title, setTitle] = useState('')
+  const [weekDays, setWeekDays] = useState<number[]>([])
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault()
+
+    if (!title || !weekDays || weekDays.length === 0) {
+      return
+    }
+
+    api.post('/habit', {
+      title,
+      weekDays
+    })
+    await toast.promise(
+      api.post('/habit', {
+        title,
+        weekDays
+      }),
+      {
+        loading: 'Criando hábito, aguarde...',
+        error: 'Erro ao criar hábito, tente-novamente',
+        success: 'Hábito criado com sucesso!'
+      }
+    )
+    setTitle('')
+    setWeekDays([])
+  }
+
+  const handleToggleWeekDay = (weekDay: number) => {
+    if (weekDays.includes(weekDay)) {
+      const updateWeekDays = weekDays.filter((item) => item !== weekDay)
+      setWeekDays(updateWeekDays)
+      return
+    }
+
+    setWeekDays((oldState) => [...oldState, weekDay])
+  }
 
   return (
     <Modal opened={opened} onClose={onClose}>
@@ -29,7 +87,7 @@ export const ModalCreateHabit = (props: Props) => {
         </header>
 
         <div>
-          <form className="w-full mt-6">
+          <form onSubmit={handleSubmit} className="w-full mt-6">
             <div>
               <label className="font-semibold leading-tight" htmlFor="title">
                 Qual seu comprometimento?
@@ -37,9 +95,11 @@ export const ModalCreateHabit = (props: Props) => {
               <input
                 type="text"
                 id="title"
+                onChange={(event) => setTitle(event.target.value)}
                 className="w-full p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
                 placeholder="ex.: Exercícios, dormir bem, etc..."
                 autoFocus
+                value={title}
               />
             </div>
 
@@ -47,6 +107,19 @@ export const ModalCreateHabit = (props: Props) => {
               <label className="font-semibold leading-tight" htmlFor="">
                 Qual a recorrência?
               </label>
+
+              <div className="flex flex-col gap-2 mt-3">
+                {availableWeekDays.map((weekDay, index) => {
+                  return (
+                    <Checkbox
+                      key={weekDay}
+                      description={weekDay}
+                      onChange={(value) => handleToggleWeekDay(index)}
+                      checked={weekDays.includes(index)}
+                    />
+                  )
+                })}
+              </div>
             </div>
 
             <button
