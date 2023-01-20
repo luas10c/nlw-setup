@@ -1,5 +1,6 @@
 import axios from 'axios'
+import Constans from 'expo-constants'
 
 export const api = axios.create({
-  baseURL: process.env.API_URL
+  baseURL: Constans.expoConfig?.extra?.baseURL
 })
