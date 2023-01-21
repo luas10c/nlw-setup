@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
-import { Checkbox } from '../checkbox'
 import { Popover } from '../popover'
 import { ProgressBar } from '../progress-bar'
+import { HabitList } from '../habit-list'
 
 type Habit = {
   date: Date
@@ -13,15 +13,20 @@ interface Props {
   opened?: boolean
   data: Habit
   position: number[]
-  onClose?(): void
+  onCompletedChanged(completed: number): void
+  onClose: () => void
 }
 
 export const PopoverHabitDay = (props: Props) => {
-  const { opened, data, position, onClose } = props
+  const { opened, data, position, onCompletedChanged, onClose } = props
   const { date, completedPercentage } = data
 
   const dayAndMonth = dayjs(date).format('DD/MM')
   const dayOfWeek = dayjs(date).format('dddd')
+
+  if (!opened) {
+    return null
+  }
 
   return (
     <Popover opened={opened} onClose={onClose}>
@@ -35,12 +40,7 @@ export const PopoverHabitDay = (props: Props) => {
 
         <ProgressBar value={completedPercentage} />
 
-        <Checkbox
-          description="Beber 2l de água"
-          onChange={(value) => console.log(value)}
-          checked
-        />
-        <Checkbox description="Comer frutas" onChange={(value) => console.log(value)} />
+        <HabitList date={date} onCompletedChanged={onCompletedChanged} />
       </div>
     </Popover>
   )
