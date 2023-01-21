@@ -68,10 +68,7 @@ export async function routes(app: FastifyInstance) {
       }
     })
 
-    const completedHabits = []
-    if (day) {
-      completedHabits.push(...day.dayHabit)
-    }
+    const completedHabits = day?.dayHabit.map((item) => item.habitId) ?? []
 
     return {
       possibleHabits,
