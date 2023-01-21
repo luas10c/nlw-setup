@@ -96,7 +96,7 @@ export const ModalCreateHabit = (props: Props) => {
                 type="text"
                 id="title"
                 onChange={(event) => setTitle(event.target.value)}
-                className="w-full p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400"
+                className="w-full p-4 rounded-lg mt-3 bg-zinc-800 text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
                 placeholder="ex.: Exercícios, dormir bem, etc..."
                 autoFocus
                 value={title}
@@ -124,7 +124,7 @@ export const ModalCreateHabit = (props: Props) => {
 
             <button
               type="submit"
-              className="w-full mt-6 rounded-lg p-3 flex gap-3 items-center justify-center font-semibold bg-green-600 hover:bg-green-500 transition-colors"
+              className="w-full mt-6 rounded-lg p-3 flex gap-3 items-center justify-center font-semibold bg-green-600 hover:bg-green-500 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-colors"
             >
               <Check size={20} weight="bold" />
               Confirmar
